@@ -4,16 +4,21 @@ class DNSEnumerator:
     def __init__(self, domain):
         self.domain = domain
         self.resolver = dns.resolver.Resolver()
+
         # Record types for Normal and Absolute scans
-        self.normal_record_types = [
-            'A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SOA'
-        ]
+        self.normal_record_types = ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SOA']
+        
+        # Full list of supported DNS record types from dnspython
         self.absolute_record_types = [
-            'A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SOA', 'PTR', 'SRV', 'CAA',
-            'NAPTR', 'LOC', 'HINFO', 'RP', 'TLSA', 'SSHFP', 'SPF', 'URI',
-            'DNSKEY', 'RRSIG', 'DS', 'NSEC', 'NSEC3', 'HIP', 'DNAME', 'CDS',
-            'CDNSKEY', 'OPENPGPKEY', 'TKEY', 'TSIG', 'APL', 'AFSDB', 'X25', 
-            'ISDN', 'RT', 'NSAP', 'SMIMEA', 'IPSECKEY', 'TALINK', 'NINFO', 'RKEY'
+            'A', 'NS', 'MD', 'MF', 'CNAME', 'SOA', 'MB', 'MG', 'MR', 'NULL', 'WKS', 
+            'PTR', 'HINFO', 'MINFO', 'MX', 'TXT', 'RP', 'AFSDB', 'X25', 'ISDN', 'RT', 
+            'NSAP', 'NSAP-PTR', 'SIG', 'KEY', 'PX', 'GPOS', 'AAAA', 'LOC', 'NXT', 
+            'SRV', 'NAPTR', 'KX', 'CERT', 'A6', 'DNAME', 'OPT', 'APL', 'DS', 'SSHFP', 
+            'IPSECKEY', 'RRSIG', 'NSEC', 'DNSKEY', 'DHCID', 'NSEC3', 'NSEC3PARAM', 
+            'TLSA', 'SMIMEA', 'HIP', 'NINFO', 'CDS', 'CDNSKEY', 'OPENPGPKEY', 'CSYNC', 
+            'ZONEMD', 'SVCB', 'HTTPS', 'SPF', 'UNSPEC', 'NID', 'L32', 'L64', 'LP', 
+            'EUI48', 'EUI64', 'TKEY', 'TSIG', 'IXFR', 'AXFR', 'MAILB', 'MAILA', 
+            'ANY', 'URI', 'CAA', 'AVC', 'AMTRELAY', 'TA', 'DLV'
         ]
 
         # Mapping record types to their respective formatting functions
@@ -28,37 +33,75 @@ class DNSEnumerator:
             'PTR': self.format_ptr_record,
             'SRV': self.format_srv_record,
             'CAA': self.format_caa_record,
-            'NAPTR': self.format_naptr_record,
-            'LOC': self.format_loc_record,
+            'MD': self.format_md_record,
+            'MF': self.format_mf_record,
+            'MB': self.format_mb_record,
+            'MG': self.format_mg_record,
+            'MR': self.format_mr_record,
+            'NULL': self.format_null_record,
+            'WKS': self.format_wks_record,
             'HINFO': self.format_hinfo_record,
+            'MINFO': self.format_minfo_record,
             'RP': self.format_rp_record,
-            'TLSA': self.format_tlsa_record,
-            'SSHFP': self.format_sshfp_record,
-            'SPF': self.format_spf_record,
-            'URI': self.format_uri_record,
-            'DNSKEY': self.format_dnskey_record,
-            'RRSIG': self.format_rrsig_record,
-            'DS': self.format_ds_record,
-            'NSEC': self.format_nsec_record,
-            'NSEC3': self.format_nsec3_record,
-            'HIP': self.format_hip_record,
-            'DNAME': self.format_dname_record,
-            'CDS': self.format_cds_record,
-            'CDNSKEY': self.format_cdnskey_record,
-            'OPENPGPKEY': self.format_openpgpkey_record,
-            'TKEY': self.format_tkey_record,
-            'TSIG': self.format_tsig_record,
-            'APL': self.format_apl_record,
             'AFSDB': self.format_afsdb_record,
             'X25': self.format_x25_record,
             'ISDN': self.format_isdn_record,
             'RT': self.format_rt_record,
             'NSAP': self.format_nsap_record,
-            'SMIMEA': self.format_smimea_record,
+            'NSAP-PTR': self.format_nsap_ptr_record,
+            'SIG': self.format_sig_record,
+            'KEY': self.format_key_record,
+            'PX': self.format_px_record,
+            'GPOS': self.format_gpos_record,
+            'LOC': self.format_loc_record,
+            'NXT': self.format_nxt_record,
+            'NAPTR': self.format_naptr_record,
+            'KX': self.format_kx_record,
+            'CERT': self.format_cert_record,
+            'A6': self.format_a6_record,
+            'DNAME': self.format_dname_record,
+            'OPT': self.format_opt_record,
+            'APL': self.format_apl_record,
+            'DS': self.format_ds_record,
+            'SSHFP': self.format_sshfp_record,
             'IPSECKEY': self.format_ipseckey_record,
-            'TALINK': self.format_talink_record,
+            'RRSIG': self.format_rrsig_record,
+            'NSEC': self.format_nsec_record,
+            'DNSKEY': self.format_dnskey_record,
+            'DHCID': self.format_dhcid_record,
+            'NSEC3': self.format_nsec3_record,
+            'NSEC3PARAM': self.format_nsec3param_record,
+            'TLSA': self.format_tlsa_record,
+            'SMIMEA': self.format_smimea_record,
+            'HIP': self.format_hip_record,
             'NINFO': self.format_ninfo_record,
-            'RKEY': self.format_rkey_record
+            'CDS': self.format_cds_record,
+            'CDNSKEY': self.format_cdnskey_record,
+            'OPENPGPKEY': self.format_openpgpkey_record,
+            'CSYNC': self.format_csync_record,
+            'ZONEMD': self.format_zonemd_record,
+            'SVCB': self.format_svcb_record,
+            'HTTPS': self.format_https_record,
+            'SPF': self.format_spf_record,
+            'UNSPEC': self.format_unspec_record,
+            'NID': self.format_nid_record,
+            'L32': self.format_l32_record,
+            'L64': self.format_l64_record,
+            'LP': self.format_lp_record,
+            'EUI48': self.format_eui48_record,
+            'EUI64': self.format_eui64_record,
+            'TKEY': self.format_tkey_record,
+            'TSIG': self.format_tsig_record,
+            'IXFR': self.format_ixfr_record,
+            'AXFR': self.format_axfr_record,
+            'MAILB': self.format_mailb_record,
+            'MAILA': self.format_maila_record,
+            'ANY': self.format_any_record,
+            'URI': self.format_uri_record,
+            'AVC': self.format_avc_record,
+            'AMTRELAY': self.format_amtrelay_record,
+            'TA': self.format_ta_record,
+            'DLV': self.format_dlv_record
         }
 
     def query_record(self, record_type):
@@ -115,10 +158,10 @@ class DNSEnumerator:
                 f"Primary Name Server: {parts[0]}\n"
                 f"Responsible Authority's Email: {parts[1].replace('.', '@', 1)}\n"
                 f"Serial Number: {parts[2]} (Used for zone versioning)\n"
-                f"Refresh Interval: {parts[3]} seconds (Time before the zone should be refreshed)\n"
-                f"Retry Interval: {parts[4]} seconds (Time to wait before retrying a failed refresh)\n"
-                f"Expire Limit: {parts[5]} seconds (Time before the zone is considered no longer authoritative)\n"
-                f"Minimum TTL: {parts[6]} seconds (Minimum TTL for any record in the zone)"
+                f"Refresh Interval: {parts[3]} seconds\n"
+                f"Retry Interval: {parts[4]} seconds\n"
+                f"Expire Limit: {parts[5]} seconds\n"
+                f"Minimum TTL: {parts[6]} seconds"
             )
         return formatted_records
 
@@ -137,102 +180,76 @@ class DNSEnumerator:
     def format_caa_record(self, records):
         return [f"Certification Authority Authorization: {record.split(' ', 2)[1]}={record.split(' ', 2)[2]} (Flags: {record.split(' ', 2)[0]})" for record in records]
 
-    def format_naptr_record(self, records):
-        formatted_records = []
-        for record in records:
-            parts = record.split(' ', 5)
-            formatted_records.append(f"NAPTR Record: {parts}")
-        return formatted_records
-
-    def format_loc_record(self, records):
-        return [f"Location: {record}" for record in records]
-
-    def format_hinfo_record(self, records):
-        return [f"Host Information: {record}" for record in records]
-
-    def format_rp_record(self, records):
-        return [f"Responsible Person: {record}" for record in records]
-
-    def format_tlsa_record(self, records):
-        return [f"TLSA Record: {record}" for record in records]
-
-    def format_sshfp_record(self, records):
-        return [f"SSHFP Record: {record}" for record in records]
-
-    def format_spf_record(self, records):
-        return [f"SPF Record: {record}" for record in records]
-
-    def format_uri_record(self, records):
-        return [f"URI Record: {record}" for record in records]
-
-    def format_dnskey_record(self, records):
-        return [f"DNSKEY Record: {record}" for record in records]
-
-    def format_rrsig_record(self, records):
-        return [f"RRSIG Record: {record}" for record in records]
-
-    def format_ds_record(self, records):
-        return [f"DS Record: {record}" for record in records]
-
-    def format_nsec_record(self, records):
-        return [f"NSEC Record: {record}" for record in records]
-
-    def format_nsec3_record(self, records):
-        return [f"NSEC3 Record: {record}" for record in records]
-
-    def format_hip_record(self, records):
-        return [f"HIP Record: {record}" for record in records]
-
-    def format_dname_record(self, records):
-        return [f"DNAME Record: {record}" for record in records]
-
-    def format_cds_record(self, records):
-        return [f"CDS Record: {record}" for record in records]
-
-    def format_cdnskey_record(self, records):
-        return [f"CDNSKEY Record: {record}" for record in records]
-
-    def format_openpgpkey_record(self, records):
-        return ["OpenPGP Key: {record}" for record in records]
-
-    def format_tkey_record(self, records):
-        return ["TKEY Record: DNS metaqueries are not allowed."]
-
-    def format_tsig_record(self, records):
-        return ["TSIG Record: DNS metaqueries are not allowed."]
-
-    def format_apl_record(self, records):
-        return [f"Address Prefix List: {record}" for record in records]
-
-    def format_afsdb_record(self, records):
-        return [f"AFS Database: {record}" for record in records]
-
-    def format_x25_record(self, records):
-        return [f"X.25 Address: {record}" for record in records]
-
-    def format_isdn_record(self, records):
-        return [f"ISDN Address: {record}" for record in records]
-
-    def format_rt_record(self, records):
-        return [f"Route Through: {record}" for record in records]
-
-    def format_nsap_record(self, records):
-        return [f"NSAP Address: {record}" for record in records]
-
-    def format_smimea_record(self, records):
-        return [f"S/MIMEA Certificate Association: {record}" for record in records]
-
-    def format_ipseckey_record(self, records):
-        return [f"IPSEC Key: {record}" for record in records]
-
-    def format_talink_record(self, records):
-        return ["TALINK Record: DNS resource record type is unknown."]
-
-    def format_ninfo_record(self, records):
-        return [f"Zone Status Information: {record}" for record in records]
-
-    def format_rkey_record(self, records):
-        return ["RKEY Record: DNS resource record type is unknown."]
+    # Define similar format functions for all the other record types, such as:
+    def format_md_record(self, records): return [f"MD Record: {record}" for record in records]
+    def format_mf_record(self, records): return [f"MF Record: {record}" for record in records]
+    def format_mb_record(self, records): return [f"MB Record: {record}" for record in records]
+    def format_mg_record(self, records): return [f"MG Record: {record}" for record in records]
+    def format_mr_record(self, records): return [f"MR Record: {record}" for record in records]
+    def format_null_record(self, records): return [f"NULL Record: {record}" for record in records]
+    def format_wks_record(self, records): return [f"WKS Record: {record}" for record in records]
+    def format_hinfo_record(self, records): return [f"HINFO Record: {record}" for record in records]
+    def format_minfo_record(self, records): return [f"MINFO Record: {record}" for record in records]
+    def format_rp_record(self, records): return [f"RP Record: {record}" for record in records]
+    def format_afsdb_record(self, records): return [f"AFSDB Record: {record}" for record in records]
+    def format_x25_record(self, records): return [f"X25 Record: {record}" for record in records]
+    def format_isdn_record(self, records): return [f"ISDN Record: {record}" for record in records]
+    def format_rt_record(self, records): return [f"RT Record: {record}" for record in records]
+    def format_nsap_record(self, records): return [f"NSAP Record: {record}" for record in records]
+    def format_nsap_ptr_record(self, records): return [f"NSAP-PTR Record: {record}" for record in records]
+    def format_sig_record(self, records): return [f"SIG Record: {record}" for record in records]
+    def format_key_record(self, records): return [f"KEY Record: {record}" for record in records]
+    def format_px_record(self, records): return [f"PX Record: {record}" for record in records]
+    def format_gpos_record(self, records): return [f"GPOS Record: {record}" for record in records]
+    def format_loc_record(self, records): return [f"LOC Record: {record}" for record in records]
+    def format_nxt_record(self, records): return [f"NXT Record: {record}" for record in records]
+    def format_naptr_record(self, records): return [f"NAPTR Record: {record}" for record in records]
+    def format_kx_record(self, records): return [f"KX Record: {record}" for record in records]
+    def format_cert_record(self, records): return [f"CERT Record: {record}" for record in records]
+    def format_a6_record(self, records): return [f"A6 Record: {record}" for record in records]
+    def format_dname_record(self, records): return [f"DNAME Record: {record}" for record in records]
+    def format_opt_record(self, records): return [f"OPT Record: {record}" for record in records]
+    def format_apl_record(self, records): return [f"APL Record: {record}" for record in records]
+    def format_ds_record(self, records): return [f"DS Record: {record}" for record in records]
+    def format_sshfp_record(self, records): return [f"SSHFP Record: {record}" for record in records]
+    def format_ipseckey_record(self, records): return [f"IPSECKEY Record: {record}" for record in records]
+    def format_rrsig_record(self, records): return [f"RRSIG Record: {record}" for record in records]
+    def format_nsec_record(self, records): return [f"NSEC Record: {record}" for record in records]
+    def format_dnskey_record(self, records): return [f"DNSKEY Record: {record}" for record in records]
+    def format_dhcid_record(self, records): return [f"DHCID Record: {record}" for record in records]
+    def format_nsec3_record(self, records): return [f"NSEC3 Record: {record}" for record in records]
+    def format_nsec3param_record(self, records): return [f"NSEC3PARAM Record: {record}" for record in records]
+    def format_tlsa_record(self, records): return [f"TLSA Record: {record}" for record in records]
+    def format_smimea_record(self, records): return [f"SMIMEA Record: {record}" for record in records]
+    def format_hip_record(self, records): return [f"HIP Record: {record}" for record in records]
+    def format_ninfo_record(self, records): return [f"NINFO Record: {record}" for record in records]
+    def format_cds_record(self, records): return [f"CDS Record: {record}" for record in records]
+    def format_cdnskey_record(self, records): return [f"CDNSKEY Record: {record}" for record in records]
+    def format_openpgpkey_record(self, records): return [f"OPENPGPKEY Record: {record}" for record in records]
+    def format_csync_record(self, records): return [f"CSYNC Record: {record}" for record in records]
+    def format_zonemd_record(self, records): return [f"ZONEMD Record: {record}" for record in records]
+    def format_svcb_record(self, records): return [f"SVCB Record: {record}" for record in records]
+    def format_https_record(self, records): return [f"HTTPS Record: {record}" for record in records]
+    def format_spf_record(self, records): return [f"SPF Record: {record}" for record in records]
+    def format_unspec_record(self, records): return [f"UNSPEC Record: {record}" for record in records]
+    def format_nid_record(self, records): return [f"NID Record: {record}" for record in records]
+    def format_l32_record(self, records): return [f"L32 Record: {record}" for record in records]
+    def format_l64_record(self, records): return [f"L64 Record: {record}" for record in records]
+    def format_lp_record(self, records): return [f"LP Record: {record}" for record in records]
+    def format_eui48_record(self, records): return [f"EUI48 Record: {record}" for record in records]
+    def format_eui64_record(self, records): return [f"EUI64 Record: {record}" for record in records]
+    def format_tkey_record(self, records): return [f"TKEY Record: {record}" for record in records]
+    def format_tsig_record(self, records): return [f"TSIG Record: {record}" for record in records]
+    def format_ixfr_record(self, records): return [f"IXFR Record: {record}" for record in records]
+    def format_axfr_record(self, records): return [f"AXFR Record: {record}" for record in records]
+    def format_mailb_record(self, records): return [f"MAILB Record: {record}" for record in records]
+    def format_maila_record(self, records): return [f"MAILA Record: {record}" for record in records]
+    def format_any_record(self, records): return [f"ANY Record: {record}" for record in records]
+    def format_uri_record(self, records): return [f"URI Record: {record}" for record in records]
+    def format_avc_record(self, records): return [f"AVC Record: {record}" for record in records]
+    def format_amtrelay_record(self, records): return [f"AMTRELAY Record: {record}" for record in records]
+    def format_ta_record(self, records): return [f"TA Record: {record}" for record in records]
+    def format_dlv_record(self, records): return [f"DLV Record: {record}" for record in records]
 
     def enumerate_dns(self, scan_type="normal"):
         """Query DNS records based on the selected scan type."""
