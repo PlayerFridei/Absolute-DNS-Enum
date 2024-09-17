@@ -7,7 +7,7 @@ This is an advanced DNS enumeration tool designed to comprehensively query and r
 - **Comprehensive DNS Record Enumeration**: Retrieves standard, security-related, and even rare DNS records.
 - **Customizable Scan Modes**:
   - **Normal Scan**: Queries the most commonly used DNS records (`A`, `AAAA`, `CNAME`, `MX`, `NS`, `SOA`, `TXT`).
-  - **Absolute Scan**: Queries all possible DNS records, including `PTR`, `SRV`, `CAA`, `NAPTR`, `LOC`, `HINFO`, `RP`, `TLSA`, `SSHFP`, `SPF`, `URI`, `DNSKEY`, `RRSIG`, `DS`, `NSEC`, `NSEC3`, `HIP`, `DNAME`, `CDS`, `CDNSKEY`, `OPENPGPKEY`, `TKEY`, `TSIG`, `APL`, `AFSDB`, `X25`, `ISDN`, `RT`, `NSAP`, `SMIMEA`, `IPSECKEY`, `TALINK`, `NINFO`, `RKEY`.
+  - **Absolute Scan**: Queries all possible DNS records, including `A`, `NS`, `MD`, `MF`, `CNAME`, `SOA`, `MB`, `MG`, `MR`, `NULL`, `WKS`, `PTR`, `HINFO`, `MINFO`, `MX`, `TXT`, `RP`, `AFSDB`, `X25`, `ISDN`, `RT`, `NSAP`, `NSAP-PTR`, `SIG`, `KEY`, `PX`, `GPOS`, `AAAA`, `LOC`, `NXT`, `SRV`, `NAPTR`, `KX`, `CERT`, `A6`, `DNAME`, `OPT`, `APL`, `DS`, `SSHFP`, `IPSECKEY`, `RRSIG`, `NSEC`, `DNSKEY`, `DHCID`, `NSEC3`, `NSEC3PARAM`, `TLSA`, `SMIMEA`, `HIP`, `NINFO`, `CDS`, `CDNSKEY`, `OPENPGPKEY`, `CSYNC`, `ZONEMD`, `SVCB`, `HTTPS`, `SPF`, `UNSPEC`, `NID`, `L32`, `L64`, `LP`, `EUI48`, `EUI64`, `TKEY`, `TSIG`, `IXFR`, `AXFR`, `MAILB`, `MAILA`, `ANY`, `URI`, `CAA`, `AVC`, `AMTRELAY`, `TA`, and `DLV`.
 
 - **Formatted Output**: Presents DNS records in a clear and readable format, with explanations for each record type.
 - **Error Handling**: Robust error handling for common DNS issues such as timeouts, non-existent domains, and invalid record types.
