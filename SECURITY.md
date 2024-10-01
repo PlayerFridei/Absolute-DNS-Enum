@@ -44,7 +44,7 @@ Found an issue? Contact `[PlayerFridei@protonmail.com]` with:
 ---
 
 ## 🔒 Privacy & Security Notice
-- **No Data Collection**: The tool collects no personal information or usage data.
+- **No Data Collection**: The tool collects no personal information or usage data, but when connecting to IP addresses or domains, your IP address might be logged.
 - **Use Securely**: Test in safe, isolated environments; keep your systems secure.
 
 ---
